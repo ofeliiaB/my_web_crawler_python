@@ -1,0 +1,24 @@
+from html.parser import HTMLParser
+from urllib import parse
+
+
+class UrlsFinder(HTMLParser):
+
+    def __init__(self, start_url, current_url):
+        super().__init__()
+        self.start_url = start_url
+        self.current_url = current_url
+        self.urls = set()
+
+    def error(self, error_message):
+        pass
+
+    def handle_startendtag(self, tag, attrs):
+        if tag == 'a':
+            for (attribute, value) in attrs:
+                if attribute == 'href':
+                    url = parse.urljoin(self.start_url, value)
+                    self.urls.add(url)
+
+    def all_urls(self):
+        return self.urls
